@@ -1,3 +1,9 @@
-import { css } from './ImageGallery.module.css';
+import css from './ImageGallery.module.css';
 
-<ul class="gallery">{/* <!-- Набір <li> із зображеннями --> */}</ul>;
+export const ImageGallery = () => {
+  return (
+    <ul className={css.ImageGallery}>
+      {/* <!-- Набір <li> із зображеннями --> */}
+    </ul>
+  );
+};
