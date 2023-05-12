@@ -1,5 +1,7 @@
-import { css } from './ImageGalleryItem.module.css';
+import css from './ImageGalleryItem.module.css';
 
-<li class="gallery-item">
-  <img src="" alt="" />
-</li>;
+export const ImageGalleryItem = ({ webformaturl, tags, id }) => {
+  return (
+    <img className={css.ImageGalleryItemImage} src={webformaturl} alt={tags} />
+  );
+};

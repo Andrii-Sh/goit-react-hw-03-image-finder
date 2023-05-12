@@ -1,9 +1,11 @@
 import css from './Button.module.css';
 
-export const Button = () => {
+export const Button = ({ onClick, galleryItems, totalItems }) => {
   return (
-    <button type="button" className={css.Button}>
-      Load more
-    </button>
+    totalItems > galleryItems.length && (
+      <button type="button" className={css.Button} onClick={onClick}>
+        Load more
+      </button>
+    )
   );
 };
