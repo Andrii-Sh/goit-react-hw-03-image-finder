@@ -19,14 +19,12 @@ export class App extends Component {
   async componentDidUpdate(_, prevState) {
     const { query } = this.state;
     if (prevState.query !== query) {
-      // this.setState({ isLoading: true });
       try {
         this.setState({ isLoading: true });
-        const response = await getSearchGallery(query);
-        // console.log(response);
+        const data = await getSearchGallery(query);
         this.setState({
-          galleryItems: response.data.hits,
-          totalItems: response.data.totalHits,
+          galleryItems: data.hits,
+          totalItems: data.totalHits,
         });
       } catch (error) {
         this.setState({ error });
@@ -44,18 +42,16 @@ export class App extends Component {
     const currentPage = Math.ceil(this.state.galleryItems.length / 12);
     const nextPage = currentPage + 1;
 
-    this.setState({ isLoading: true });
-
     try {
-      // this.setState({ isLoading: true });
-      const response = await getSearchGallery(
+      this.setState({ isLoading: true });
+      const data = await getSearchGallery(
         this.state.query,
         nextPage,
         photosPerPage
       );
       this.setState({
-        galleryItems: [...this.state.galleryItems, ...response.data.hits],
-        totalItems: response.data.totalHits,
+        galleryItems: [...this.state.galleryItems, ...data.hits],
+        totalItems: data.totalHits,
       });
     } catch (error) {
       this.setState({ error });

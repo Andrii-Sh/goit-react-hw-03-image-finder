@@ -12,6 +12,7 @@ export const getSearchGallery = async (query, page = 1, photosPerPage = 12) => {
         orientation: "horizontal",
         per_page: photosPerPage,
     });   
-    return await axios.get(`${BASE_URL}?${searchParams}`);
+    const response = await axios.get(`${BASE_URL}?${searchParams}`);
+    return response.data;
     
 }
