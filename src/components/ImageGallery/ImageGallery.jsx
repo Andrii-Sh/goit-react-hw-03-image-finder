@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import css from './ImageGallery.module.css';
 import { ImageGalleryItem } from '../ImageGalleryItem/ImageGalleryItem';
 
@@ -20,4 +21,9 @@ export const ImageGallery = ({ galleryItems, openModal }) => {
       </ul>
     )
   );
+};
+
+ImageGallery.propTypes = {
+  galleryItems: PropTypes.arrayOf(PropTypes.shape),
+  openModal: PropTypes.func.isRequired,
 };

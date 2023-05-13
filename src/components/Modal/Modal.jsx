@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import css from './Modal.module.css';
 import { createPortal } from 'react-dom';
 
@@ -26,14 +27,22 @@ export class Modal extends Component {
   };
 
   render() {
-    // { url, tags } = this.props.modalImg;
+    const { url, alt } = this.props.modalImg;
     return createPortal(
       <div className={css.Overlay} onClick={this.handleBackdropClick}>
         <div className={css.Modal}>
-          <img src={this.props.modalImg.url} alt={this.props.modalImg.tags} />
+          <img src={url} alt={alt} />
         </div>
       </div>,
       modalRoot
     );
   }
 }
+
+Modal.propTypes = {
+  modalImg: PropTypes.shape({
+    url: PropTypes.string.isRequired,
+    alt: PropTypes.string.isRequired,
+  }),
+  closeModal: PropTypes.func.isRequired,
+};

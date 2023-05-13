@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import css from './Button.module.css';
 
 export const Button = ({ onClick, galleryItems, totalItems }) => {
@@ -8,4 +9,10 @@ export const Button = ({ onClick, galleryItems, totalItems }) => {
       </button>
     )
   );
+};
+
+Button.propTypes = {
+  onClick: PropTypes.func.isRequired,
+  galleryItems: PropTypes.arrayOf(PropTypes.shape),
+  totalItems: PropTypes.number.isRequired,
 };
