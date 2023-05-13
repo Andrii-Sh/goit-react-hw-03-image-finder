@@ -3,18 +3,36 @@ import { Searchbar } from '../Searchbar/Searchbar';
 import { ImageGallery } from '../ImageGallery/ImageGallery';
 import { Button } from '../Button/Button';
 import { getSearchGallery } from '../../api/pixabayApi';
+import { ThreeDots } from 'react-loader-spinner';
 import css from './App.module.css';
 
 const photosPerPage = 12;
 
 export class App extends Component {
-  state = { query: '', galleryItems: [], totalItems: '' };
+  state = {
+    query: '',
+    galleryItems: [],
+    totalItems: '',
+    isLoading: false,
+  };
 
-  componentDidUpdate(_, prevState) {
-    if (prevState.query !== this.state.query) {
-      getSearchGallery(this.state.query).then(data =>
-        this.setState({ galleryItems: data.hits, totalItems: data.totalHits })
-      );
+  async componentDidUpdate(_, prevState) {
+    const { query } = this.state;
+    if (prevState.query !== query) {
+      // this.setState({ isLoading: true });
+      try {
+        this.setState({ isLoading: true });
+        const response = await getSearchGallery(query);
+        // console.log(response);
+        this.setState({
+          galleryItems: response.data.hits,
+          totalItems: response.data.totalHits,
+        });
+      } catch (error) {
+        this.setState({ error });
+      } finally {
+        this.setState({ isLoading: false });
+      }
     }
   }
 
@@ -22,24 +40,42 @@ export class App extends Component {
     this.setState({ query });
   };
 
-  handleLoadmoreImages = () => {
+  handleLoadmoreImages = async () => {
     const currentPage = Math.ceil(this.state.galleryItems.length / 12);
     const nextPage = currentPage + 1;
 
-    getSearchGallery(this.state.query, nextPage, photosPerPage).then(data =>
+    this.setState({ isLoading: true });
+
+    try {
+      // this.setState({ isLoading: true });
+      const response = await getSearchGallery(
+        this.state.query,
+        nextPage,
+        photosPerPage
+      );
       this.setState({
-        galleryItems: [...this.state.galleryItems, ...data.hits],
-        totalItems: data.totalHits,
-      })
-    );
+        galleryItems: [...this.state.galleryItems, ...response.data.hits],
+        totalItems: response.data.totalHits,
+      });
+    } catch (error) {
+      this.setState({ error });
+    } finally {
+      this.setState({ isLoading: false });
+    }
   };
 
   render() {
-    const { galleryItems, totalItems } = this.state;
+    const { galleryItems, totalItems, isLoading } = this.state;
     return (
       <div className={css.App}>
         <Searchbar onSubmit={this.handleSearch}></Searchbar>
         <ImageGallery galleryItems={galleryItems}></ImageGallery>
+        {isLoading && (
+          <div className={css.isLoading}>
+            <ThreeDots />
+          </div>
+        )}
+        S
         <Button
           onClick={this.handleLoadmoreImages}
           galleryItems={galleryItems}

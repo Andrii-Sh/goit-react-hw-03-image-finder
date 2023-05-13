@@ -7,3 +7,8 @@
     grid-gap: 16px;
     padding-bottom: 24px;
 }
+
+.isLoading {
+    display: flex;
+    justify-content: center;
+}
