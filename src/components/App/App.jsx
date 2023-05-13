@@ -5,6 +5,8 @@ import { Button } from '../Button/Button';
 import { getSearchGallery } from '../../api/pixabayApi';
 import css from './App.module.css';
 
+const photosPerPage = 12;
+
 export class App extends Component {
   state = { query: '', galleryItems: [], totalItems: '' };
 
@@ -21,7 +23,15 @@ export class App extends Component {
   };
 
   handleLoadmoreImages = () => {
-    console.log('On click');
+    const currentPage = Math.ceil(this.state.galleryItems.length / 12);
+    const nextPage = currentPage + 1;
+
+    getSearchGallery(this.state.query, nextPage, photosPerPage).then(data =>
+      this.setState({
+        galleryItems: [...this.state.galleryItems, ...data.hits],
+        totalItems: data.totalHits,
+      })
+    );
   };
 
   render() {
