@@ -3,6 +3,7 @@ import { Searchbar } from '../Searchbar/Searchbar';
 import { ImageGallery } from '../ImageGallery/ImageGallery';
 import { Button } from '../Button/Button';
 import { getSearchGallery } from '../../api/pixabayApi';
+import { Modal } from '../Modal/Modal';
 import { ThreeDots } from 'react-loader-spinner';
 import css from './App.module.css';
 
@@ -14,6 +15,11 @@ export class App extends Component {
     galleryItems: [],
     totalItems: '',
     isLoading: false,
+    showModal: false,
+    modalImg: {
+      url: '',
+      alt: '',
+    },
   };
 
   async componentDidUpdate(_, prevState) {
@@ -60,23 +66,46 @@ export class App extends Component {
     }
   };
 
+  openModal = item => {
+    this.setState(prevState => ({
+      showModal: true,
+      modalImg: {
+        url: item.largeImageURL,
+        alt: item.tags,
+      },
+    }));
+  };
+
+  closeModal = () => {
+    this.setState(prevState => ({
+      showModal: false,
+      modalImg: {},
+    }));
+  };
+
   render() {
-    const { galleryItems, totalItems, isLoading } = this.state;
+    const { galleryItems, totalItems, isLoading, showModal, modalImg } =
+      this.state;
     return (
       <div className={css.App}>
         <Searchbar onSubmit={this.handleSearch}></Searchbar>
-        <ImageGallery galleryItems={galleryItems}></ImageGallery>
+        <ImageGallery
+          galleryItems={galleryItems}
+          openModal={this.openModal}
+        ></ImageGallery>
         {isLoading && (
           <div className={css.isLoading}>
             <ThreeDots />
           </div>
         )}
-        S
         <Button
           onClick={this.handleLoadmoreImages}
           galleryItems={galleryItems}
           totalItems={totalItems}
         ></Button>
+        {showModal && (
+          <Modal modalImg={modalImg} closeModal={this.closeModal} />
+        )}
       </div>
     );
   }
