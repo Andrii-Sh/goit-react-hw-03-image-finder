@@ -8,11 +8,10 @@ import { Modal } from '../Modal/Modal';
 
 import css from './App.module.css';
 
-const photosPerPage = 12;
-
 export class App extends Component {
   state = {
     query: '',
+    page: 1,
     galleryItems: [],
     totalItems: 0,
     isLoading: false,
@@ -24,13 +23,13 @@ export class App extends Component {
   };
 
   async componentDidUpdate(_, prevState) {
-    const { query } = this.state;
-    if (prevState.query !== query) {
+    const { query, page, galleryItems } = this.state;
+    if (prevState.query !== query || prevState.page !== page) {
       try {
         this.setState({ isLoading: true });
-        const data = await getSearchGallery(query);
+        const data = await getSearchGallery(query, page);
         this.setState({
-          galleryItems: data.hits,
+          galleryItems: [...galleryItems, ...data.hits],
           totalItems: data.totalHits,
         });
       } catch (error) {
@@ -45,26 +44,10 @@ export class App extends Component {
     this.setState({ query });
   };
 
-  handleLoadmoreImages = async () => {
-    const currentPage = Math.ceil(this.state.galleryItems.length / 12);
-    const nextPage = currentPage + 1;
-
-    try {
-      this.setState({ isLoading: true });
-      const data = await getSearchGallery(
-        this.state.query,
-        nextPage,
-        photosPerPage
-      );
-      this.setState({
-        galleryItems: [...this.state.galleryItems, ...data.hits],
-        totalItems: data.totalHits,
-      });
-    } catch (error) {
-      this.setState({ error });
-    } finally {
-      this.setState({ isLoading: false });
-    }
+  handleLoadmoreImages = () => {
+    this.setState({
+      page: this.state.page + 1,
+    });
   };
 
   openModal = item => {
@@ -95,11 +78,9 @@ export class App extends Component {
           openModal={this.openModal}
         ></ImageGallery>
         {isLoading && <Loader />}
-        <Button
-          onClick={this.handleLoadmoreImages}
-          galleryItems={galleryItems}
-          totalItems={totalItems}
-        ></Button>
+        {totalItems > galleryItems.length && (
+          <Button onClick={this.handleLoadmoreImages}></Button>
+        )}
         {showModal && (
           <Modal modalImg={modalImg} closeModal={this.closeModal} />
         )}

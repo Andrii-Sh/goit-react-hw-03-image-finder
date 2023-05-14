@@ -24,6 +24,10 @@ export const ImageGallery = ({ galleryItems, openModal }) => {
 };
 
 ImageGallery.propTypes = {
-  galleryItems: PropTypes.arrayOf(PropTypes.shape),
+  galleryItems: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number.isRequired,
+    })
+  ),
   openModal: PropTypes.func.isRequired,
 };
