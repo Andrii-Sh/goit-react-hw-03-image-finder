@@ -41,7 +41,15 @@ export class App extends Component {
   }
 
   handleSearch = query => {
-    this.setState({ query });
+    if (this.state.query === query) {
+      return alert(`You are alredy watching "${query}" category`);
+    }
+
+    this.setState({
+      query: query.toLowerCase(),
+      galleryItems: [],
+      page: 1,
+    });
   };
 
   handleLoadmoreImages = () => {
